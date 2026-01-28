@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEIAN Wallet Privacy Policy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #444;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        .highlight {
+            background: #f0f4ff;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-weight: 500;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 HEIAN Wallet Privacy Policy</h1>
+        <p class="last-updated"><strong>Last Updated:</strong> January 28, 2026</p>
+
+        <h2>Overview</h2>
+        <p>HEIAN Wallet is a non-custodial cryptocurrency wallet for the Tempo blockchain. <strong>We do not collect, store, or transmit any personal information.</strong></p>
+
+        <h2>Data Storage</h2>
+        <p>All data is stored locally in your browser:</p>
+        <ul>
+            <li><strong>Wallet Keys:</strong> Encrypted with AES-256-GCM and stored locally using chrome.storage.local</li>
+            <li><strong>Transaction History:</strong> Stored locally in your browser</li>
+            <li><strong>Contact Information:</strong> Stored locally in your browser</li>
+            <li><strong>Settings and Preferences:</strong> Stored locally in your browser</li>
+        </ul>
+        <div class="highlight">
+            <strong>Important:</strong> No data is sent to external servers or third parties.
+        </div>
+
+        <h2>Third-Party Services</h2>
+        <p>The extension connects to blockchain services for functionality:</p>
+
+        <p><strong>Tempo blockchain RPC endpoints</strong> (<code>rpc.moderato.tempo.xyz</code>, <code>rpc.testnet.tempo.xyz</code>)</p>
+        <ul>
+            <li><strong>Purpose:</strong> Balance queries, transaction broadcasting, smart contract interactions</li>
+            <li><strong>Data sent:</strong> Only blockchain queries (transaction data, addresses, contract calls)</li>
+        </ul>
+
+        <p><strong>Ethereum mainnet RPC</strong> (<code>eth.llamarpc.com</code>)</p>
+        <ul>
+            <li><strong>Purpose:</strong> ENS name resolution only (.eth addresses)</li>
+            <li><strong>Data sent:</strong> Only ENS lookup queries</li>
+        </ul>
+
+        <div class="highlight">
+            <strong>No personal information is transmitted</strong> to these endpoints. Only blockchain-related queries are sent.
+        </div>
+
+        <h2>Security</h2>
+        <ul>
+            <li><strong>You control your private keys:</strong> HEIAN Wallet is non-custodial</li>
+            <li><strong>Passwords never leave your device:</strong> All encryption happens locally</li>
+            <li><strong>Private keys are encrypted:</strong> AES-256-GCM encryption protects your keys</li>
+            <li><strong>Auto-lock protection:</strong> Wallet locks automatically after inactivity</li>
+            <li><strong>No remote code:</strong> All JavaScript is bundled with the extension (no CDN loading)</li>
+        </ul>
+
+        <h2>What We Do NOT Collect</h2>
+        <p>We do <strong>NOT</strong> use:</p>
+        <ul>
+            <li>Google Analytics or any analytics services</li>
+            <li>Tracking cookies or pixels</li>
+            <li>User behavior monitoring</li>
+            <li>Error reporting services that send data externally</li>
+            <li>Telemetry or usage statistics</li>
+        </ul>
+
+        <h2>Permissions Explanation</h2>
+        <p><strong>storage:</strong> Store encrypted wallet data locally in your browser</p>
+        <p><strong>host_permissions:</strong> Connect to Tempo blockchain RPC endpoints and Ethereum mainnet for ENS resolution</p>
+        <p><strong>content_scripts:</strong> Inject Web3 provider (window.ethereum) to enable dApp connectivity. You must explicitly approve each dApp connection.</p>
+
+        <h2>dApp Connections</h2>
+        <p>When you connect HEIAN Wallet to a dApp (decentralized application):</p>
+        <ul>
+            <li>You must explicitly approve each connection</li>
+            <li>dApps can only see your wallet address (not private keys)</li>
+            <li>You must approve each transaction individually</li>
+            <li>You can disconnect from dApps at any time</li>
+        </ul>
+
+        <h2>Data Deletion</h2>
+        <p>To delete all your data:</p>
+        <ol>
+            <li>Remove the wallet from your extension settings, OR</li>
+            <li>Uninstall the HEIAN Wallet extension</li>
+        </ol>
+        <p>This will permanently delete all locally stored data including encrypted keys, transaction history, and contacts.</p>
+
+        <h2>Children's Privacy</h2>
+        <p>HEIAN Wallet is not intended for use by children under 13 years of age. We do not knowingly collect information from children.</p>
+
+        <h2>Changes to Privacy Policy</h2>
+        <p>We may update this privacy policy from time to time. Changes will be posted on this page with an updated "Last Updated" date.</p>
+
+        <h2>International Users</h2>
+        <p>HEIAN Wallet can be used globally. All data storage is local to your device regardless of your location.</p>
+
+        <h2>Contact</h2>
+        <div class="contact-section">
+            <p>For questions about this privacy policy:</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:heianwallet@gmail.com">heianwallet@gmail.com</a></li>
+                <li><strong>GitHub:</strong> <a href="https://github.com/[your-username]/heian-wallet">github.com/[your-username]/heian-wallet</a></li>
+                <li><strong>Website:</strong> <a href="https://tempo.xyz">tempo.xyz</a></li>
+            </ul>
+        </div>
+
+        <h2>Third-Party Links</h2>
+        <p>HEIAN Wallet may contain links to external websites (blockchain explorers, documentation). We are not responsible for the privacy practices of these sites.</p>
+
+        <h2>Compliance</h2>
+        <p>This privacy policy is designed to comply with:</p>
+        <ul>
+            <li>Chrome Web Store Developer Program Policies</li>
+            <li>General Data Protection Regulation (GDPR)</li>
+            <li>California Consumer Privacy Act (CCPA)</li>
+        </ul>
+
+        <div class="summary">
+            <strong>Summary:</strong> HEIAN Wallet is a privacy-first, non-custodial wallet. We don't collect your data, we don't track you, and we don't sell anything to third parties. Your keys, your crypto, your privacy.
+        </div>
+    </div>
+</body>
+</html>

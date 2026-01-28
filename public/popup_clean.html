@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HEIAN Wallet</title>
+<script src="feather.min.js"></script>
+<style>
+/* ============================================
+   SAFE PREMIUM UPGRADE FOR HEIAN WALLET
+   Keeps all functionality, enhances visuals
+   ============================================ */
+
+:root {
+  --bg-app: #fafbfc;
+  --bg-surface: #ffffff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  
+  --border-subtle: #f1f5f9;
+  --border-default: #e2e8f0;
+  
+  --primary: #2563eb;
+  --primary-hover: #1e40af;
+  --primary-light: #dbeafe;
+  
+  --success: #059669;
+  --success-light: #d1fae5;
+  --danger: #dc2626;
+  --danger-light: #fee2e2;
+  
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+  --bg-app: #0f172a;
+  --bg-surface: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #64748b;
+  --border-subtle: #334155;
+  --border-default: #475569;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 360px;
+  min-height: 600px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container { 
+  padding: 20px; 
+  background: var(--bg-app);
+}
+
+.header { 
+  text-align: center; 
+  margin-bottom: 24px; 
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 999px;
+}
+
+h1 { 
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 18px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.balance {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--radius-xl);
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-xl);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.balance:hover {
+  box-shadow: 0 25px 35px -10px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.balance::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.balance::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.balance:hover::after {
+  opacity: 1;
+}
+
+.balance > * {
+  position: relative;
+  z-index: 1;
+}
+
+.balance > div:first-of-type {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.balance-amount { 
+  font-size: 40px; 
+  font-weight: 700; 
+  color: white;
+  margin: 8px 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.balance label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.balance label:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.balance label span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.95);
+  font-weight: 500;
+}
+
+#refreshBalanceBtn {
+  background: rgba(255,255,255,0.2) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+.actions { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 12px; 
+  margin-bottom: 20px; 
+}
+
+.actions button {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  color: #0f172a;
+  padding: 16px;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.actions button:hover {
+  border-color: #2563eb;
+  background: #f8fafc;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+button {
+  background: white;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+button:hover {
+  background: var(--bg-app);
+  border-color: var(--text-tertiary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0);
+  transition: transform 0.1s;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+button:disabled::before {
+  display: none;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6b4194 100%) !important;
+  box-shadow: var(--shadow-xl) !important;
+  transform: translateY(-2px) !important;
+}
+
+.address {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  word-break: break-all;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.address::before {
+  content: '📋 Click to copy';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.address:hover::before {
+  opacity: 1;
+}
+
+.address:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  color: #0f172a;
+  font-size: 14px;
+  transition: all var(--transition-base);
+  font-family: inherit;
+}
+
+input:hover, select:hover, textarea:hover {
+  border-color: #cbd5e1;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+  transform: translateY(-1px);
+}
+
+input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  appearance: none;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+[id$="Screen"] {
+  animation: fadeInSlide 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Fade out animation */
+@keyframes fadeOutSlide {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.98);
+  }
+}
+
+.screen-exiting {
+  animation: fadeOutSlide 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Icon Buttons */
+.icon-button {
+  background: white;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.action-button {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: 0;
+}
+
+.action-button:hover::before {
+  opacity: 1;
+}
+
+.action-button:hover {
+  background: white;
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.action-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.action-button-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.action-button:hover .action-button-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.action-button-icon-send {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.action-button-icon-receive {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.action-button-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Feature Buttons */
+.feature-button {
+  background: white;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.feature-button:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+
+/* Menu Items */
+.menu-section {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(-5px);
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.menu-item:hover {
+  background: var(--primary-light);
+  padding-left: 16px;
+}
+
+.menu-item:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.menu-item-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.menu-item-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Balance Card */
+.balance-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--radius-xl);
+  padding: 28px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.balance-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.balance-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.balance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.balance-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.balance-amount-large {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+  margin: 8px 0 16px 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toggle-label:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.toggle-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.toggle-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.95);
+  font-weight: 500;
+}
+
+/* Token Grid */
+.token-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.token-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-color: #2563eb !important;
+  cursor: default;
+}
+
+/* Wallet Address Card */
+.wallet-address-card {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.wallet-address-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.wallet-address-value {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  color: var(--text-secondary);
+  word-break: break-all;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 12px;
+  background: var(--bg-app);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.wallet-address-value:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.wallet-address-value:active {
+  transform: translateY(0);
+}
+
+/* Specific Button Overrides for Inline Styled Buttons */
+#addAccountBtn:hover {
+  background: #059669 !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#faucetBtn:hover {
+  background: #059669 !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#editAccountNameBtn:hover {
+  background: #1e40af !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#refreshBalanceBtn:hover {
+  background: rgba(255,255,255,0.3) !important;
+  transform: scale(1.05);
+}
+
+#sendTabAddress:hover {
+  background: #1e293b !important;
+  transform: translateY(-1px);
+}
+
+#sendTabContact:hover {
+  background: #f8fafc !important;
+  border-color: var(--primary) !important;
+}
+
+#addContactBtn:hover {
+  background: #059669 !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#exportTransactionsBtn:hover {
+  background: #1e40af !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#uploadCsvBtn:hover {
+  background: #1e40af !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#copyPaymentLinkBtn:hover {
+  background: #1e40af !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+#downloadTemplateBtn:hover {
+  background: #f8fafc !important;
+  border-color: var(--primary) !important;
+}
+
+/* Filter Buttons */
+.filter-btn {
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  background: #f8fafc !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background: #2563eb !important;
+  color: white !important;
+}
+
+.filter-btn.active:hover {
+  background: #1e40af !important;
+}
+
+/* Network Switch Buttons */
+#switchToTestnet:hover,
+#switchToMainnet:hover {
+  background: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+/* Settings Buttons */
+#exportPrivateKeyBtn:hover,
+#exportSeedBtn:hover,
+#apiKeysBtn:hover {
+  background: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+#clearDataBtn:hover {
+  background: #fecaca !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* CRITICAL FIX: ID-specific hover for unlock button */
+#unlockBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+#unlockBtn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6b4194 100%) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Also fix all other primary buttons using ID + class combo */
+button#unlockBtn.primary-btn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6b4194 100%) !important;
+}
+
+#encryptWalletBtn:hover,
+#createBtn:hover,
+#confirmSendBtn:hover,
+#seedConfirm:hover,
+#saveContactBtn:hover,
+#executeSendBtn:hover,
+#executeBatchBtn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6b4194 100%) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS - CRITICAL CSS
+   ============================================ */
+#toast-container {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+  max-width: 400px !important;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  pointer-events: all;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.toast.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.toast.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.toast.info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.toast.removing {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   DARK MODE - COMPLETE STYLES
+   ============================================ */
+body.dark-mode .action-button-label {
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode .menu-item-label {
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode .wallet-address-value {
+  color: var(--text-secondary) !important;
+}
+
+body.dark-mode .wallet-address-label {
+  color: var(--text-tertiary) !important;
+}
+
+body.dark-mode .balance,
+body.dark-mode .action-button,
+body.dark-mode .feature-button,
+body.dark-mode .menu-item,
+body.dark-mode .wallet-address-card {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-default) !important;
+}
+
+body.dark-mode .menu-section {
+  background: transparent;
+}
+
+body.dark-mode svg {
+  color: var(--text-primary);
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-default) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Dark Mode Toggle Button */
+#darkModeToggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2px solid var(--border-default);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+#darkModeToggle:hover {
+  transform: scale(1.1) rotate(20deg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+</style>
+</head>
+<body>
+<div class="container" style="position:relative;">
+
+<!-- Network Indicator -->
+<div id="networkIndicator" style="position:absolute;top:15px;right:15px;font-size:11px;padding:5px 10px;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:15px;cursor:pointer;color:#2563eb;font-weight:600;transition:all 250ms cubic-bezier(0.4, 0, 0.2, 1);z-index:10;">
+  <span id="networkName">Testnet</span>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <h1>HEIAN Wallet</h1>
+</div>
+
+<!-- CREATE SCREEN -->
+<div id="createScreen">
+  <button id="createBtn" class="primary-btn" style="width:100%;margin-bottom:12px;">Create New Wallet</button>
+  <button id="importBtn" style="width:100%;">Import Existing Wallet</button>
+</div>
+
+<!-- PASSWORD SETUP SCREEN -->
+<div id="passwordSetupScreen" style="display:none;">
+  <div style="text-align:center;margin-bottom:30px;">
+    <div style="font-size:48px;margin-bottom:10px;">🔐</div>
+    <h2 style="margin-bottom:10px;">Secure Your Wallet</h2>
+    <p style="font-size:13px;color:#64748b;">Choose a strong password to encrypt your wallet</p>
+  </div>
+  
+  <div style="margin-bottom:15px;">
+    <label>Password</label>
+    <input type="password" id="newPassword" placeholder="Min 8 characters">
+  </div>
+  
+  <div style="margin-bottom:15px;">
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Re-enter password">
+  </div>
+  
+  <div id="passwordError" style="color:#dc2626;font-size:12px;margin-bottom:15px;display:none;"></div>
+  
+  <button id="encryptWalletBtn" class="primary-btn" style="width:100%;">Encrypt & Continue</button>
+</div>
+
+<!-- UNLOCK SCREEN -->
+<div id="unlockScreen" style="display:none;">
+  <div style="text-align:center;margin-bottom:40px;">
+    <div style="font-size:64px;margin-bottom:15px;">🔒</div>
+    <h2 style="margin-bottom:5px;">Wallet Locked</h2>
+    <p style="font-size:13px;color:#64748b;">Enter your password to unlock</p>
+  </div>
+  
+  <div style="margin-bottom:20px;">
+    <input type="password" id="unlockPassword" placeholder="Enter password">
+  </div>
+  
+  <div id="unlockError" style="color:#dc2626;font-size:12px;margin-bottom:15px;text-align:center;display:none;"></div>
+  
+  <button id="unlockBtn" class="primary-btn" style="width:100%;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">Unlock Wallet</button>
+</div>
+
+<!-- SEED SCREEN -->
+<div id="seedScreen" style="display:none;">
+  <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:12px;padding:15px;margin-bottom:20px;">
+    <div style="font-size:12px;margin-bottom:10px;font-weight:600;color:#dc2626;">⚠️ Save your recovery phrase</div>
+    <div id="seedDisplay" style="background:white;border-radius:8px;padding:15px;font-family:monospace;font-size:13px;"></div>
+  </div>
+  <label style="display:flex;gap:10px;margin-bottom:20px;cursor:pointer;align-items:center;">
+    <input type="checkbox" id="seedCheck" style="width:18px;height:18px;">
+    <span style="font-size:12px;">I have saved my recovery phrase</span>
+  </label>
+  <button class="primary-btn" id="seedConfirm" style="width:100%;">Continue</button>
+</div>
+<!-- ============================================
+     WALLET SCREEN - PREMIUM REDESIGNED
+     ============================================ -->
+<div id="walletScreen" style="display:none;">
+  
+  <!-- Lock Button - Top Left -->
+  <button id="lockWalletBtn" class="icon-button" style="position:absolute;top:12px;left:16px;z-index:20;background:white;">
+    <i data-feather="lock" style="width:18px;height:18px;color:#64748b;"></i>
+  </button>
+  
+  <!-- Account Selector Section -->
+  <div style="margin-bottom:24px;">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="accountSelect" style="flex:1;font-weight:600;">
+        <option value="0">Account 1</option>
+      </select>
+      <button id="editAccountNameBtn" class="icon-button" style="background:#2563eb;color:white;border:none;" title="Rename Account">
+        <i data-feather="edit-2" style="width:16px;height:16px;"></i>
+      </button>
+      <button id="addAccountBtn" style="padding:10px 16px;background:#10b981;color:white;border:none;font-weight:600;border-radius:8px;">
+        + Add
+      </button>
+    </div>
+  </div>
+
+  <!-- Balance Card - Hero Section -->
+  <div class="balance-card">
+    <div class="balance-header">
+      <span class="balance-label">Total Balance</span>
+      <button id="refreshBalanceBtn" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);padding:8px;border-radius:8px;color:white;cursor:pointer;box-shadow:none;">
+        <i data-feather="refresh-cw" style="width:14px;height:14px;"></i>
+      </button>
+    </div>
+    
+    <div class="balance-amount-large">$0.00</div>
+    
+    <!-- Hide Zero Balance Toggle -->
+    <label class="toggle-label">
+      <input type="checkbox" id="hideZeroBalanceToggle" class="toggle-checkbox">
+      <span class="toggle-text">Hide zero balances</span>
+    </label>
+  </div>
+
+  <!-- Token Balances Grid -->
+  <div id="tokenBalances" class="token-grid">
+    <!-- Token cards will be injected here by JavaScript -->
+  </div>
+
+  <!-- Primary Actions -->
+  <div class="action-buttons">
+    <button id="sendBtn" class="action-button">
+      <div class="action-button-icon action-button-icon-send">
+        <i data-feather="arrow-up-right" style="width:20px;height:20px;"></i>
+      </div>
+      <span class="action-button-label">Send</span>
+    </button>
+    
+    <button id="receiveBtn" class="action-button">
+      <div class="action-button-icon action-button-icon-receive">
+        <i data-feather="arrow-down-left" style="width:20px;height:20px;"></i>
+      </div>
+      <span class="action-button-label">Receive</span>
+    </button>
+  </div>
+
+  <!-- Wallet Address -->
+  <div class="wallet-address-card">
+    <div class="wallet-address-label">Wallet Address</div>
+    <div id="walletAddress" class="wallet-address-value">Loading...</div>
+  </div>
+
+  <!-- Menu Section -->
+  <div class="menu-section">
+    <div id="historyMenuBtn" class="menu-item">
+      <div class="menu-item-icon">
+        <i data-feather="clock" style="width:20px;height:20px;"></i>
+      </div>
+      <span class="menu-item-label">Transaction History</span>
+      <i data-feather="chevron-right" style="width:18px;height:18px;opacity:0.4;"></i>
+    </div>
+    
+    <div id="contactsMenuBtn" onclick="showContacts()" class="menu-item">
+      <div class="menu-item-icon">
+        <i data-feather="users" style="width:20px;height:20px;"></i>
+      </div>
+      <span class="menu-item-label">Saved Contacts</span>
+      <i data-feather="chevron-right" style="width:18px;height:18px;opacity:0.4;"></i>
+    </div>
+    
+    <div id="settingsMenuBtn" class="menu-item">
+      <div class="menu-item-icon">
+        <i data-feather="settings" style="width:20px;height:20px;"></i>
+      </div>
+      <span class="menu-item-label">Settings</span>
+      <i data-feather="chevron-right" style="width:18px;height:18px;opacity:0.4;"></i>
+    </div>
+  </div>
+
+  <!-- Additional Features -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+    <button id="batchPaymentsBtn" class="feature-button">
+      <i data-feather="layers" style="width:18px;height:18px;"></i>
+      <span>Batch Payments</span>
+    </button>
+    
+    <button id="faucetBtn" class="feature-button" style="background:#10b981;color:white;border:none;white-space:nowrap;overflow:hidden;">
+      <i data-feather="droplet" style="width:18px;height:18px;flex-shrink:0;"></i>
+      <span style="display:inline-block;">Get Tokens</span>
+    </button>
+  </div>
+
+</div>
+<!-- ============================================
+     CONFIRM SCREEN
+     ============================================ -->
+<div id="confirmScreen" style="display:none;">
+  <button id="backFromConfirm" style="margin-bottom:20px;">← Back</button>
+
+  <h2 style="text-align:center;margin-bottom:24px;">Review Transaction</h2>
+
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+
+    <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f1f5f9;">
+      <div style="font-size:12px;color:#64748b;margin-bottom:4px;font-weight:600;">TO</div>
+      <div id="confirmRecipient" style="font-size:14px;color:#0f172a;font-weight:600;"></div>
+      <div id="confirmAddress" style="font-size:11px;color:#94a3b8;font-family:monospace;margin-top:4px;"></div>
+    </div>
+
+    <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f1f5f9;">
+      <div style="font-size:12px;color:#64748b;margin-bottom:4px;font-weight:600;">AMOUNT</div>
+      <div id="confirmAmount" style="font-size:24px;color:#0f172a;font-weight:700;"></div>
+    </div>
+
+    <div id="confirmMemoSection" style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f1f5f9;display:none;">
+      <div style="font-size:12px;color:#64748b;margin-bottom:4px;font-weight:600;">MEMO</div>
+      <div id="confirmMemo" style="font-size:14px;color:#475569;"></div>
+    </div>
+
+    <div style="background:#fafbfc;border-radius:8px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:12px;color:#64748b;">Network Fee</span>
+        <span style="font-size:12px;color:#0f172a;font-weight:600;">~$0.001</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-size:13px;color:#0f172a;font-weight:600;">Total</span>
+        <span id="confirmTotal" style="font-size:14px;color:#0f172a;font-weight:700;"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <button id="confirmSendBtn" class="primary-btn" style="width:100%;margin-bottom:10px;">Confirm & Send</button>
+  <button id="cancelSendBtn" style="width:100%;">Cancel</button>
+
+  <div id="confirmError" style="color:#dc2626;font-size:12px;margin-top:15px;text-align:center;display:none;"></div>
+</div>
+
+<!-- ============================================
+     RECEIVE SCREEN
+     ============================================ -->
+<div id="receiveScreen" style="display:none;">
+  <button id="backFromReceive" style="margin-bottom:20px;">← Back</button>
+  <h2 style="text-align:center;margin-bottom:20px;">Receive</h2>
+  <div style="background:white;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px;">
+    <div style="width:200px;height:200px;margin:0 auto 15px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#64748b;border-radius:8px;" id="qrCodeContainer"></div>
+    <div style="font-size:11px;color:#64748b;word-break:break-all;font-family:monospace;" id="receiveAddress"></div>
+  </div>
+  <button id="copyReceiveAddressBtn" class="primary-btn" style="width:100%;">📋 Copy Address</button>
+</div>
+
+<!-- ============================================
+     SEND SCREEN
+     ============================================ -->
+<div id="sendScreen" style="display:none;">
+  <button id="backFromSend" style="margin-bottom:20px;">← Back</button>
+  <h2 style="text-align:center;margin-bottom:20px;">Send Payment</h2>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button id="sendTabAddress" style="flex:1;padding:10px;background:#0f172a;color:white;border:none;border-radius:8px;font-weight:600;">Address</button>
+    <button id="sendTabContact" style="flex:1;padding:10px;background:white;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;font-weight:500;">Contact</button>
+  </div>
+
+  <!-- Address Form -->
+  <div id="sendAddressForm" style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:16px;">
+    <div style="margin-bottom:15px;">
+      <label>To Address</label>
+      <input type="text" id="sendToAddress" placeholder="0x... or vitalik.eth">
+      <div id="ensStatus" style="margin-top:8px;font-size:12px;display:none;"></div>
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Token</label>
+      <select id="sendToken">
+        <option value="AlphaUSD">AlphaUSD</option>
+        <option value="BetaUSD">BetaUSD</option>
+        <option value="pathUSD">pathUSD</option>
+        <option value="ThetaUSD">ThetaUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Amount</label>
+      <input type="number" id="sendAmount" placeholder="0.00" step="0.01">
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Memo (optional)</label>
+      <input type="text" id="sendMemo" placeholder="Invoice #1234...">
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">
+        💡 TIP-20 feature: Add invoice ID or payment reference
+      </div>
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Pay Transaction Fee With</label>
+      <select id="feeToken">
+        <option value="AlphaUSD">AlphaUSD</option>
+        <option value="BetaUSD">BetaUSD</option>
+        <option value="pathUSD">pathUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">
+        ⚡ TIP-20 feature: No gas token needed
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <div id="sendContactForm" style="display:none;background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+    <div style="margin-bottom:15px;">
+      <label>Select Contact</label>
+      <select id="sendContactSelect">
+        <option value="">Choose a contact...</option>
+      </select>
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Token</label>
+      <select id="sendTokenContact">
+        <option value="AlphaUSD">AlphaUSD</option>
+        <option value="BetaUSD">BetaUSD</option>
+        <option value="pathUSD">pathUSD</option>
+        <option value="ThetaUSD">ThetaUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Amount</label>
+      <input type="number" id="sendAmountContact" placeholder="0.00" step="0.01">
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Memo (optional)</label>
+      <input type="text" id="sendMemoContact" placeholder="Invoice #1234...">
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Pay Transaction Fee With</label>
+      <select id="feeTokenContact">
+        <option value="AlphaUSD">AlphaUSD</option>
+        <option value="BetaUSD">BetaUSD</option>
+        <option value="pathUSD">pathUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="primary-btn" id="executeSendBtn" style="width:100%;">Send</button>
+</div>
+<!-- ============================================
+     CONTACTS SCREEN
+     ============================================ -->
+<div id="contactsScreen" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <button id="backFromContacts">← Back</button>
+    <h2 style="margin:0;">Contacts</h2>
+    <button id="addContactBtn" style="padding:10px;background:#10b981;color:white;border:none;border-radius:8px;">+ Add</button>
+  </div>
+  <div id="contactsList" style="max-height:400px;overflow-y:auto;">
+    <div style="text-align:center;padding:40px;opacity:0.7;font-size:14px;">No contacts yet. Add your first contact!</div>
+  </div>
+</div>
+
+<!-- ============================================
+     ADD CONTACT SCREEN
+     ============================================ -->
+<div id="addContactScreen" style="display:none;">
+  <button id="backFromAddContact" style="margin-bottom:20px;">← Back</button>
+  <h2 style="text-align:center;margin-bottom:20px;">Add Contact</h2>
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:16px;">
+    <div style="margin-bottom:15px;">
+      <label>Name</label>
+      <input type="text" id="contactName" placeholder="John Doe">
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>Address</label>
+      <input type="text" id="contactAddress" placeholder="0x..." style="font-family:monospace;">
+    </div>
+    <div>
+      <label>Memo (optional)</label>
+      <input type="text" id="contactMemo" placeholder="Friend, Client, etc.">
+    </div>
+  </div>
+  <button id="saveContactBtn" class="primary-btn" style="width:100%;">Save Contact</button>
+</div>
+
+<!-- ============================================
+     HISTORY SCREEN
+     ============================================ -->
+<div id="historyScreen" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <button id="backFromHistory">← Back</button>
+    <h2 style="margin:0;">Transaction History</h2>
+    <button id="exportTransactionsBtn" style="background:#2563eb;border:none;border-radius:6px;padding:8px 12px;color:white;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;">
+      <i data-feather="download" style="width:14px;height:14px;"></i>
+      Export CSV
+    </button>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:15px;overflow-x:auto;">
+    <button class="filter-btn active" data-filter="all" style="padding:8px 16px;border-radius:20px;background:#2563eb;color:white;border:none;font-size:12px;white-space:nowrap;cursor:pointer;">All</button>
+    <button class="filter-btn" data-filter="today" style="padding:8px 16px;border-radius:20px;background:white;border:1px solid #e2e8f0;color:#64748b;font-size:12px;white-space:nowrap;cursor:pointer;">Today</button>
+    <button class="filter-btn" data-filter="week" style="padding:8px 16px;border-radius:20px;background:white;border:1px solid #e2e8f0;color:#64748b;font-size:12px;white-space:nowrap;cursor:pointer;">This Week</button>
+    <button class="filter-btn" data-filter="month" style="padding:8px 16px;border-radius:20px;background:white;border:1px solid #e2e8f0;color:#64748b;font-size:12px;white-space:nowrap;cursor:pointer;">This Month</button>
+  </div>
+
+  <!-- Skeleton loaders -->
+  <div id="historyLoadingSkeleton" style="max-height:400px;overflow-y:auto;">
+    <div style="background:white;border:1px solid #f1f5f9;border-radius:10px;padding:14px;margin-bottom:8px;">
+      <div class="skeleton" style="width:80px;height:16px;margin-bottom:8px;"></div>
+      <div class="skeleton" style="width:120px;height:12px;"></div>
+    </div>
+    <div style="background:white;border:1px solid #f1f5f9;border-radius:10px;padding:14px;margin-bottom:8px;">
+      <div class="skeleton" style="width:80px;height:16px;margin-bottom:8px;"></div>
+      <div class="skeleton" style="width:120px;height:12px;"></div>
+    </div>
+    <div style="background:white;border:1px solid #f1f5f9;border-radius:10px;padding:14px;margin-bottom:8px;">
+      <div class="skeleton" style="width:80px;height:16px;margin-bottom:8px;"></div>
+      <div class="skeleton" style="width:120px;height:12px;"></div>
+    </div>
+  </div>
+
+  <!-- Real transaction list -->
+  <div id="transactionList" style="display:none;max-height:400px;overflow-y:auto;">
+    <div style="text-align:center;padding:60px 20px;opacity:0.7;">
+      <div style="font-size:48px;margin-bottom:10px;">📭</div>
+      <div style="font-size:14px;">No transactions yet</div>
+      <div style="font-size:12px;margin-top:5px;opacity:0.7;">Your transaction history will appear here</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     SETTINGS SCREEN
+     ============================================ -->
+<div id="settingsScreen" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <button id="backFromSettings">← Back</button>
+    <h2 style="font-size:18px;margin:0;">Settings</h2>
+    <div style="width:40px;"></div>
+  </div>
+
+  <!-- Network Switcher -->
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:16px;margin-bottom:16px;">
+    <div style="font-weight:600;font-size:14px;margin-bottom:12px;">Network</div>
+    <div style="display:flex;gap:8px;">
+      <button id="switchToTestnet" style="flex:1;padding:12px;border-radius:8px;border:2px solid #e2e8f0;background:white;cursor:pointer;font-size:13px;font-weight:600;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>
+          Testnet
+        </div>
+      </button>
+      <button id="switchToMainnet" style="flex:1;padding:12px;border-radius:8px;border:2px solid #e2e8f0;background:white;cursor:pointer;font-size:13px;font-weight:600;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10b981;"></div>
+          Mainnet
+        </div>
+      </button>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#64748b;text-align:center;">
+      Currently on: <span id="currentNetworkName" style="font-weight:600;"></span>
+    </div>
+  </div>
+
+  <div style="margin-bottom:15px;">
+    <button id="exportPrivateKeyBtn" style="width:100%;padding:14px 16px;background:white;border:1px solid #f1f5f9;border-radius:12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>🔑 Export Private Key</span>
+      <span style="opacity:0.7;">→</span>
+    </button>
+  </div>
+
+  <div style="margin-bottom:15px;">
+    <button id="apiKeysBtn" style="width:100%;padding:14px 16px;background:white;border:1px solid #f1f5f9;border-radius:12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div>
+        <div style="font-weight:600;margin-bottom:4px;">🤖 API Keys</div>
+        <div style="font-size:12px;opacity:0.7;">For AI agents & automation</div>
+      </div>
+      <i data-feather="chevron-right" style="width:16px;height:16px;"></i>
+    </button>
+
+    <button id="exportSeedBtn" style="width:100%;padding:14px 16px;background:white;border:1px solid #f1f5f9;border-radius:12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>📝 View Seed Phrase</span>
+      <span style="opacity:0.7;">→</span>
+    </button>
+  </div>
+
+  <div style="margin-bottom:15px;">
+    <button id="clearDataBtn" style="width:100%;padding:15px;background:#fee2e2;border:1px solid #fecaca;border-radius:12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:#dc2626;">
+      <span>🗑️ Clear Wallet Data</span>
+      <span style="opacity:0.7;">→</span>
+    </button>
+  </div>
+
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:10px;padding:16px;margin-top:24px;">
+    <div style="text-align:center;opacity:0.7;font-size:12px;margin-bottom:5px;">HEIAN Wallet</div>
+    <div style="text-align:center;opacity:0.6;font-size:11px;">Version 1.0.0</div>
+    <div style="text-align:center;opacity:0.6;font-size:10px;margin-top:8px;">Built for Tempo blockchain</div>
+  </div>
+</div>
+<!-- ============================================
+     BATCH PAYMENTS SCREEN
+     ============================================ -->
+<div id="batchPaymentsScreen" style="display:none;">
+  <button id="backFromBatch" style="margin-bottom:20px;">← Back</button>
+  
+  <h2 style="text-align:center;margin-bottom:16px;">Batch Payments</h2>
+  
+  <div style="background:linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);border:1px solid #93c5fd;border-radius:12px;padding:12px;margin-bottom:20px;">
+    <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:6px;">TIP-20 Batch Payments</div>
+    <div style="font-size:11px;color:#1e3a8a;line-height:1.5;">
+      Pay multiple recipients with memos in one transaction
+    </div>
+  </div>
+  
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+    <div style="font-size:14px;color:#64748b;margin-bottom:12px;">
+      Upload a CSV file with payment details
+    </div>
+    
+    <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+    <button id="uploadCsvBtn" style="width:100%;padding:14px;background:#2563eb;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-bottom:12px;">
+      📄 Upload CSV File
+    </button>
+    
+    <div id="batchProgress" style="margin-top:16px;padding:12px;background:#f8fafc;border-radius:8px;display:none;"></div>
+    
+    <div style="background:#f8fafc;border-radius:8px;padding:12px;font-size:12px;color:#64748b;">
+      <strong style="color:#0f172a;">CSV Format:</strong><br>
+      <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;">address,amount,memo</code><br>
+      <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;">0x742d35...,1000,January Salary</code>
+    </div>
+    
+    <button id="downloadTemplateBtn" style="width:100%;padding:10px;background:white;border:1px solid #e2e8f0;border-radius:8px;color:#475569;margin-top:12px;cursor:pointer;">
+      ⬇️ Download CSV Template
+    </button>
+  </div>
+  
+  <div id="parsedPaymentsList" style="display:none;">
+    <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 style="font-size:16px;font-weight:600;">Review Payments</h3>
+        <div id="paymentCount" style="font-size:14px;color:#64748b;"></div>
+      </div>
+      
+      <div style="background:#fafbfc;border-radius:8px;padding:12px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#64748b;font-size:13px;">Total Recipients:</span>
+          <span id="totalRecipients" style="font-weight:600;"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#64748b;font-size:13px;">Total Amount:</span>
+          <span id="totalAmount" style="font-weight:600;"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#64748b;font-size:13px;">Selected Token:</span>
+          <select id="batchTokenSelect" style="padding:4px 8px;border:1px solid #e2e8f0;border-radius:4px;font-size:13px;">
+            <option value="AlphaUSD">AlphaUSD</option>
+            <option value="BetaUSD">BetaUSD</option>
+            <option value="pathUSD">pathUSD</option>
+            <option value="ThetaUSD">ThetaUSD</option>
+            <option value="KlarnaUSD">💗 KlarnaUSD</option>
+          </select>
+        </div>
+      </div>
+      
+      <div id="paymentItemsList" style="max-height:300px;overflow-y:auto;margin-bottom:16px;"></div>
+      
+      <div id="batchErrors" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;margin-bottom:16px;color:#dc2626;font-size:13px;"></div>
+      
+      <div style="margin-bottom:16px;">
+        <label>Pay Transaction Fees With</label>
+        <select id="batchFeeToken">
+          <option value="AlphaUSD">AlphaUSD</option>
+          <option value="BetaUSD">BetaUSD</option>
+          <option value="pathUSD">pathUSD</option>
+          <option value="KlarnaUSD">💗 KlarnaUSD</option>
+        </select>
+      </div>
+      
+      <button id="executeBatchBtn" class="primary-btn" style="width:100%;margin-bottom:10px;">Send All Payments</button>
+      <button id="cancelBatchBtn" style="width:100%;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     PAYMENT LINK SCREEN
+     ============================================ -->
+<div id="paymentLinkScreen" style="display:none;">
+  <button id="backFromPaymentLinks" style="margin-bottom:20px;">← Back</button>
+  
+  <h2 style="text-align:center;margin-bottom:24px;">Payment Request</h2>
+  
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+    <div style="font-size:14px;color:#64748b;margin-bottom:16px;">
+      Create a payment request link or QR code
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Recipient (Your Address)</label>
+      <input type="text" id="paymentAddress" readonly style="background:#f8fafc;font-family:monospace;font-size:11px;color:#64748b;">
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Amount</label>
+      <input type="number" id="paymentAmount" placeholder="0.00" step="0.01">
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Token</label>
+      <select id="paymentToken">
+        <option value="AlphaUSD">🔵 AlphaUSD</option>
+        <option value="BetaUSD">🟢 BetaUSD</option>
+        <option value="pathUSD">🟣 pathUSD</option>
+        <option value="ThetaUSD">🟠 ThetaUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Description (Optional)</label>
+      <input type="text" id="paymentMemo" placeholder="Invoice #123, Order #456, etc.">
+    </div>
+    
+    <button id="generatePaymentLinkBtn" class="primary-btn" style="width:100%;">Generate Payment Link</button>
+  </div>
+  
+  <div id="paymentLinkResult" style="display:none;background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;">
+    <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;">Payment Link Generated</h3>
+    
+    <div style="text-align:center;margin-bottom:16px;">
+      <div id="paymentQRCode" style="display:inline-block;padding:16px;background:white;border:2px solid #f1f5f9;border-radius:12px;"></div>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <label>Payment Link</label>
+      <textarea id="generatedLink" readonly style="min-height:80px;background:#f8fafc;font-family:monospace;font-size:11px;color:#64748b;"></textarea>
+    </div>
+    
+    <button id="copyPaymentLinkBtn" style="width:100%;padding:12px;background:#2563eb;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">
+      📋 Copy Link
+    </button>
+  </div>
+</div>
+
+<!-- ============================================
+     BUY STABLECOINS SCREEN
+     ============================================ -->
+<div id="buyStablecoinsScreen" style="display:none;">
+  <button id="buyBackBtn" style="margin-bottom:20px;">← Back</button>
+  
+  <h2 style="text-align:center;margin-bottom:24px;">Buy Stablecoins</h2>
+  
+  <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:12px;padding:16px;margin-bottom:20px;">
+    <div style="font-size:13px;color:#92400e;margin-bottom:8px;font-weight:600;">💳 Demo Mode</div>
+    <div style="font-size:12px;color:#78350f;">
+      This is a preview. To enable real purchases, apply for Bridge API access
+    </div>
+  </div>
+  
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+    <div style="margin-bottom:16px;">
+      <label>Amount (USD)</label>
+      <input type="number" id="buyAmount" placeholder="100" step="10" min="10">
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">Minimum: $10 USD</div>
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Token</label>
+      <select id="buyToken">
+        <option value="AlphaUSD">🔵 AlphaUSD</option>
+        <option value="BetaUSD">🟢 BetaUSD</option>
+        <option value="pathUSD">🟣 pathUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Payment Method</label>
+      <select>
+        <option value="card">💳 Credit/Debit Card</option>
+        <option value="ach" disabled>🏦 Bank Account (Coming Soon)</option>
+      </select>
+    </div>
+    
+    <div id="buyPreview" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Preview</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:#64748b;">You pay:</span>
+        <span id="buyPreviewAmount" style="font-size:13px;font-weight:600;">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:#64748b;">You get:</span>
+        <span id="buyPreviewToken" style="font-size:13px;font-weight:600;color:#10b981;">0.00 AlphaUSD</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-size:13px;color:#64748b;">Fee (0.5%):</span>
+        <span id="buyPreviewFee" style="font-size:13px;color:#64748b;">$0.00</span>
+      </div>
+    </div>
+    
+    <button class="primary-btn" style="width:100%;">Buy Now</button>
+  </div>
+</div>
+
+<!-- ============================================
+     SELL STABLECOINS SCREEN
+     ============================================ -->
+<div id="sellStablecoinsScreen" style="display:none;">
+  <button id="sellBackBtn" style="margin-bottom:20px;">← Back</button>
+  
+  <h2 style="text-align:center;margin-bottom:24px;">Sell Stablecoins</h2>
+  
+  <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:12px;padding:16px;margin-bottom:20px;">
+    <div style="font-size:13px;color:#92400e;margin-bottom:8px;font-weight:600;">💳 Demo Mode</div>
+    <div style="font-size:12px;color:#78350f;">
+      This is a preview. To enable real sales, apply for Bridge API access
+    </div>
+  </div>
+  
+  <div style="background:white;border:1px solid #f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px;">
+    <div style="margin-bottom:16px;">
+      <label>Amount</label>
+      <input type="number" id="sellAmount" placeholder="100" step="10" min="10">
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">Minimum: 10 tokens</div>
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Token</label>
+      <select id="sellToken">
+        <option value="AlphaUSD">🔵 AlphaUSD</option>
+        <option value="BetaUSD">🟢 BetaUSD</option>
+        <option value="pathUSD">🟣 pathUSD</option>
+        <option value="KlarnaUSD">💗 KlarnaUSD</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom:16px;">
+      <label>Receive To</label>
+      <select>
+        <option value="ach">🏦 Bank Account (ACH)</option>
+        <option value="wire" disabled>🏦 Wire Transfer (Coming Soon)</option>
+      </select>
+    </div>
+    
+    <div id="sellPreview" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Preview</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:#64748b;">You sell:</span>
+        <span id="sellPreviewAmount" style="font-size:13px;font-weight:600;">0.00 AlphaUSD</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:#64748b;">You get:</span>
+        <span id="sellPreviewUSD" style="font-size:13px;font-weight:600;color:#10b981;">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-size:13px;color:#64748b;">Fee (1%):</span>
+        <span id="sellPreviewFee" style="font-size:13px;color:#64748b;">$0.00</span>
+      </div>
+    </div>
+    
+    <button class="primary-btn" style="width:100%;">Sell Now</button>
+  </div>
+</div>
+
+<!-- ============================================
+     API KEYS SCREEN
+     ============================================ -->
+<div id="apiKeysScreen" style="display:none;">
+  <button id="backFromAPIKeys" style="margin-bottom:20px;">← Back</button>
+  
+  <h2 style="text-align:center;margin-bottom:24px;">API Keys</h2>
+  
+  <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:12px;padding:16px;margin-bottom:20px;">
+    <div style="font-size:13px;color:#92400e;margin-bottom:8px;font-weight:600;">🤖 For AI Agents & Automation</div>
+    <div style="font-size:12px;color:#78350f;">
+      Create API keys to allow programmatic payments from AI agents, bots, or automated systems.
+    </div>
+  </div>
+  
+  <div id="apiKeysList" style="margin-bottom:20px;"></div>
+  
+  <button id="createAPIKeyBtn" class="primary-btn" style="width:100%;margin-bottom:12px;">
+    Create New API Key
+  </button>
+  
+  <button id="showAPIDocsBtn" style="width:100%;">📖 View API Documentation</button>
+</div>
+
+</div>
+<!-- Toast Notification Container -->
+<div id="toast-container"></div>
+
+<!-- All CSS now in main <style> tag above - No longer needed here -->
+
+<script src="ethers.min.js"></script>
+<script src="qrcode.min.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
