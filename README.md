@@ -2,9 +2,15 @@
 
 **A secure, non-custodial Chrome extension wallet for Tempo blockchain stablecoins.**
 
-[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)](https://chrome.google.com/webstore)
+<div align="center">
+
+[![Install from Chrome Web Store](https://img.shields.io/badge/Install_from-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc)
+
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-green)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Live on Chrome Store](https://img.shields.io/badge/Status-Live-success)](https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc)
+
+</div>
 
 ---
 
@@ -55,10 +61,11 @@ Seamless connection to any Web3 application.
 
 ## 🚀 Installation
 
-### From Chrome Web Store (Recommended)
-*Coming soon - Currently under review*
+### From Chrome Web Store (Recommended) ⭐
 
-### Manual Installation (For Testing)
+**[Install HEIAN Wallet from Chrome Web Store](https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc)** - One-click installation!
+
+### Manual Installation (For Developers)
 
 1. **Download this repository**
    ```bash
@@ -186,7 +193,7 @@ heian-wallet/
 - ✅ Built-in swap
 - ✅ Batch CSV payments
 - ✅ dApp connector
-- ✅ Submitted to Chrome Web Store
+- ✅ **LIVE on Chrome Web Store** 🎉
 
 ### Planned Features
 - [ ] Hardware wallet support (Ledger, Trezor)
@@ -276,7 +283,9 @@ The developers are not responsible for any loss of funds.
 
 ## 📈 Status
 
-🟢 **Production Ready** - Submitted to Chrome Web Store (awaiting approval)
+🟢 **LIVE ON CHROME WEB STORE**
+
+**[→ Install Now](https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc)** - Available for public download!
 
 Built with ❤️ for the Tempo community
 
