@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEIAN Wallet – Tempo Blockchain Stablecoin Wallet</title>
+  <meta name="description" content="A secure, non-custodial Chrome extension wallet for Tempo blockchain stablecoins. Built-in swap, batch CSV payments, dApp connector." />
+  <meta property="og:title" content="HEIAN Wallet – Tempo Blockchain Stablecoin Wallet" />
+  <meta property="og:description" content="A secure, non-custodial Chrome extension wallet for Tempo blockchain stablecoins." />
+  <meta property="og:url" content="https://de-lightpro.github.io/heian-wallet/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #18181f;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --green: #22c55e;
+      --text: #f1f1f5;
+      --muted: #888899;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,15,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn-install {
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      color: white !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-install:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 100px 20px 80px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: var(--accent2);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+    .dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff 40%, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(108,99,255,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,99,255,0.45); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover { background: var(--bg2); transform: translateY(-2px); }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 48px 20px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 0 40px;
+    }
+    .stat { text-align: center; }
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+    /* FEATURES */
+    .section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 540px; margin-bottom: 56px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-3px); }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex;
+      gap: 28px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+    .step-content h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+    .step-content p { color: var(--muted); font-size: 0.9rem; }
+
+    /* SECURITY */
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .security-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .security-icon { font-size: 1.5rem; min-width: 32px; }
+    .security-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .security-item p { font-size: 0.82rem; color: var(--muted); }
+
+    /* BUILT FOR TEMPO */
+    .tempo-section {
+      background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(167,139,250,0.05));
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 24px;
+      padding: 60px 48px;
+      text-align: center;
+      margin: 0 40px 80px;
+    }
+    .tempo-section h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .tempo-section p { color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto 32px; }
+    .tokens {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .token {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent2);
+    }
+
+    /* CTA BOTTOM */
+    .cta-section {
+      text-align: center;
+      padding: 80px 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .cta-section h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 40%, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cta-section p { color: var(--muted); font-size: 1.05rem; margin-bottom: 40px; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-weight: 800;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { color: var(--muted); font-size: 0.8rem; }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .stats { gap: 28px; margin: 0 20px; }
+      .section { padding: 60px 20px; }
+      .tempo-section { padding: 40px 24px; margin: 0 20px 60px; }
+      footer { padding: 32px 20px; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🏦 HEIAN</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#security">Security</a>
+    <a href="#how">How it works</a>
+    <a href="https://github.com/DE-LIGHTPRO/heian-wallet" target="_blank">GitHub</a>
+    <a href="https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc" class="btn-install" target="_blank">Install Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    LIVE ON CHROME WEB STORE
+  </div>
+  <h1>The Wallet Built<br/>for Tempo</h1>
+  <p>A secure, non-custodial Chrome extension for managing Tempo blockchain stablecoins. Built-in swap, batch payroll payments, and full dApp integration.</p>
+  <div class="hero-cta">
+    <a href="https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc" class="btn-primary" target="_blank">
+      🚀 Install from Chrome Store
+    </a>
+    <a href="https://github.com/DE-LIGHTPRO/heian-wallet" class="btn-secondary" target="_blank">
+      ⭐ View on GitHub
+    </a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value">8,441</div>
+    <div class="stat-label">Lines of Code</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">20</div>
+    <div class="stat-label">Polished Screens</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">8</div>
+    <div class="stat-label">Days to Build</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">5</div>
+    <div class="stat-label">Stablecoins Supported</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">100+</div>
+    <div class="stat-label">Batch Payments</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2>Everything you need.<br/>Nothing you don't.</h2>
+  <p class="section-sub">Built from the ground up for the Tempo ecosystem with real-world use cases in mind.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>Batch CSV Payments</h3>
+      <p>Upload a CSV and pay 100+ addresses in one click. Perfect for DAO distributions, payroll, and team payments.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔄</span>
+      <h3>Built-in Token Swap</h3>
+      <p>Swap between all 5 Tempo stablecoins instantly with configurable slippage control. No third-party needed.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">👤</span>
+      <h3>Multi-Account HD Wallet</h3>
+      <p>BIP-39/44 standard. One seed phrase manages unlimited accounts. Industry-standard security.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔌</span>
+      <h3>dApp Connector</h3>
+      <p>EIP-6963 compliant Web3 provider. Works seamlessly with Uniswap and all Web3 applications.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🌐</span>
+      <h3>ENS Resolution</h3>
+      <p>Send to .eth names instead of long addresses. Human-readable transactions made easy.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📜</span>
+      <h3>TIP-20 Memo Support</h3>
+      <p>Built-in invoice tracking with TIP-20 memo fields. Compliance and accounting ready out of the box.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📤</span>
+      <h3>Transaction Export</h3>
+      <p>Export your full transaction history as CSV for accounting, taxes, or compliance reporting.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🌙</span>
+      <h3>Dark Mode & Responsive</h3>
+      <p>Full dark mode with Greek letter icons for visual clarity. Clean UI that works at any browser size.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💼</span>
+      <h3>Contact Management</h3>
+      <p>Save frequently used addresses with labels. Never paste a wrong address again.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT FOR TEMPO -->
+<div class="tempo-section">
+  <h2>🏦 Built for Tempo Blockchain</h2>
+  <p>Native support for all 5 Tempo stablecoins. Ready for mainnet launch.</p>
+  <div class="tokens">
+    <span class="token">α AlphaUSD</span>
+    <span class="token">β BetaUSD</span>
+    <span class="token">π pathUSD</span>
+    <span class="token">θ ThetaUSD</span>
+    <span class="token">Κ KlarnaUSD</span>
+  </div>
+  <a href="https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc" class="btn-primary" target="_blank" style="display:inline-flex;">
+    🚀 Install HEIAN Wallet Free
+  </a>
+</div>
+
+<!-- SECURITY -->
+<section class="section" id="security">
+  <div class="section-label">Security</div>
+  <h2>Your keys.<br/>Your funds.</h2>
+  <p class="section-sub">Military-grade encryption. Zero data transmitted. You are the only one in control.</p>
+  <div class="security-grid">
+    <div class="security-item">
+      <span class="security-icon">🔐</span>
+      <div>
+        <h4>AES-256-GCM Encryption</h4>
+        <p>Private keys encrypted with military-grade standards before storage.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <span class="security-icon">🔑</span>
+      <div>
+        <h4>Non-Custodial</h4>
+        <p>You hold your private keys. No server ever touches your funds.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <span class="security-icon">🚫</span>
+      <div>
+        <h4>No Data Transmission</h4>
+        <p>Everything stays local. Zero personal data sent anywhere.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <span class="security-icon">✅</span>
+      <div>
+        <h4>No Remote Code</h4>
+        <p>100% bundled locally. No dynamic code loading. Google approved.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <span class="security-icon">🔒</span>
+      <div>
+        <h4>Auto-Lock</h4>
+        <p>Wallet locks automatically after configurable timeout period.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <span class="security-icon">📋</span>
+      <div>
+        <h4>BIP-39/44 Standard</h4>
+        <p>Industry-standard mnemonic and HD wallet derivation paths.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">How It Works</div>
+  <h2>Up and running<br/>in 60 seconds.</h2>
+  <p class="section-sub">Install from Chrome Web Store and start using Tempo stablecoins immediately.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Install from Chrome Web Store</h3>
+        <p>One click install. No sign-up, no email, no personal data required. Google-verified extension.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Create or Import Your Wallet</h3>
+        <p>Generate a new wallet with a 12-word recovery phrase, or import an existing one. Set a strong password.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Connect to Tempo Testnet</h3>
+        <p>Automatically connects to the Tempo blockchain. Start sending, receiving, and swapping stablecoins instantly.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Connect to Any dApp</h3>
+        <p>Visit any Web3 app, click "Connect Wallet", select HEIAN Wallet. Full EIP-6963 Web3 provider support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Ready to use Tempo stablecoins?</h2>
+  <p>Join the growing HEIAN Wallet community. Free, open source, and built for the Tempo ecosystem.</p>
+  <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+    <a href="https://chromewebstore.google.com/detail/heian-wallet/bgepdfmijeimlkckojgdgakapabjmdpc" class="btn-primary" target="_blank">
+      🚀 Install Free from Chrome Store
+    </a>
+    <a href="https://github.com/DE-LIGHTPRO/heian-wallet" class="btn-secondary" target="_blank">
+      View Source Code
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🏦 HEIAN Wallet</div>
+  <div class="footer-links">
+    <a href="https://github.com/DE-LIGHTPRO/heian-wallet" target="_blank">GitHub</a>
+    <a href="https://github.com/DE-LIGHTPRO/heian-wallet/blob/main/CHANGELOG.md" target="_blank">Changelog</a>
+    <a href="https://de-lightpro.github.io/heian-wallet-privacy-policy/" target="_blank">Privacy Policy</a>
+    <a href="mailto:heianwallet@gmail.com">Contact</a>
+    <a href="https://twitter.com/Heianwallet" target="_blank">Twitter</a>
+  </div>
+  <div class="footer-copy">© 2026 HEIAN Wallet · Built for Tempo Blockchain</div>
+</footer>
+
+</body>
+</html>
