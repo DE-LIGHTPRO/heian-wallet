@@ -69,7 +69,7 @@ Seamless connection to any Web3 application.
 
 1. **Download this repository**
    ```bash
-   git clone https://github.com/yourusername/heian-wallet.git
+   git clone https://github.com/DE-LIGHTPRO/heian-wallet.git
    cd heian-wallet
    ```
 
@@ -231,7 +231,7 @@ Contributions are welcome! Here's how you can help:
 ### Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/heian-wallet.git
+git clone https://github.com/DE-LIGHTPRO/heian-wallet.git
 cd heian-wallet
 
 # Load in Chrome for testing
@@ -256,7 +256,7 @@ MIT License - See [LICENSE](LICENSE) file for details
 - **Email:** heianwallet@gmail.com
 - **Website:** https://tempo.xyz
 - **Privacy Policy:** https://de-lightpro.github.io/heian-wallet-privacy-policy/
-- **Issues:** [GitHub Issues](https://github.com/yourusername/heian-wallet/issues)
+- **Issues:** [GitHub Issues](https://github.com/DE-LIGHTPRO/heian-wallet/issues)
 
 ---
 
